@@ -1,34 +1,245 @@
 <!DOCTYPE html>
-<html>
+<html lang="ro">
 <head>
-<title>Happy Valentine's Day ❤️</title>
+<meta charset="UTF-8">
+<title>Valentine 💌</title>
+
 <style>
-body {
-background: linear-gradient(pink, red);
-text-align: center;
-font-family: Arial;
-color: white;
-padding-top: 100px;
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Arial, sans-serif;
+    overflow:hidden;
+    background: linear-gradient(-45deg, #ff9a9e, #ff6a88, #ff99ac, #fecfef);
+    background-size:400% 400%;
+    animation: gradient 10s ease infinite;
 }
-button {
-padding: 15px 30px;
-font-size: 20px;
-border: none;
-border-radius: 20px;
-background: white;
-color: red;
-cursor: pointer;
+
+@keyframes gradient{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
+
+/* ================= INIMI FUNDAL ================= */
+
+.heart{
+    position:absolute;
+    color:#ff4d6d;
+    font-size:20px;
+    animation: float 6s linear infinite;
+    opacity:0.7;
+}
+
+@keyframes float{
+    0%{transform:translateY(100vh) scale(0.5);}
+    100%{transform:translateY(-10vh) scale(1.2);}
+}
+
+/* ================= PLIC ================= */
+
+.envelope{
+    position:relative;
+    width:300px;
+    height:200px;
+    cursor:pointer;
+    transition:1s;
+}
+
+.shadow{
+    position:absolute;
+    width:300px;
+    height:25px;
+    background:rgba(0,0,0,0.3);
+    bottom:-40px;
+    border-radius:50%;
+    left:0;
+    animation: pulseShadow 2s infinite;
+}
+
+@keyframes pulseShadow{
+    0%,100%{transform:scaleX(1);}
+    50%{transform:scaleX(1.1);}
+}
+
+.envelope-body{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#e07a7a;
+    border-radius:5px;
+}
+
+.flap{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#d65f6e;
+    clip-path:polygon(0 0, 100% 0, 50% 60%);
+    transform-origin:top;
+    transition:1s;
+}
+
+.open .flap{
+    transform:rotateX(180deg);
+}
+
+.drop{
+    transform:translateY(800px);
+    opacity:0;
+}
+
+/* ================= SCRISOARE ================= */
+
+.letter{
+    position:absolute;
+    width:300px;
+    background:#fff8dc;
+    padding:25px;
+    box-sizing:border-box;
+    text-align:center;
+    display:none;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    animation: fadeIn 1s forwards;
+}
+
+@keyframes fadeIn{
+    from{opacity:0; transform:scale(0.8);}
+    to{opacity:1; transform:scale(1);}
+}
+
+.showLetter{
+    display:block;
+}
+
+/* ================= BUTOANE ================= */
+
+button{
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    margin:10px;
+    transition:0.3s;
+}
+
+#yes{
+    background:#ff4d6d;
+    color:white;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+}
+
+#yes:hover{
+    box-shadow:0 0 15px #ff4d6d;
+}
+
+#no{
+    background:white;
+    color:#ff4d6d;
+}
+
+.result{
+    margin-top:20px;
+    font-size:24px;
+    color:#d6336c;
+    display:none;
+    animation: pop 0.6s ease;
+}
+
+@keyframes pop{
+    0%{transform:scale(0);}
+    100%{transform:scale(1);}
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>Happy Valentine's Day ❤️</h1>
-<p>Ai vrea să ieși cu mine? 😄</p>
+<div class="envelope" id="envelope">
+    <div class="flap"></div>
+    <div class="envelope-body"></div>
+    <div class="shadow"></div>
+</div>
 
-<button onclick="alert('Yeeee 😍')">Da</button>
-<button onclick="alert('Mai încearcă 😂')">Nu</button>
+<div class="letter" id="letter">
+    <h2>Buna ziua123 💌</h2>
+    <p>Aici completezi mesajul tău romantic 😏</p>
+
+    <button id="yes">Da ❤️</button>
+    <button id="no">Nu 😅</button>
+
+    <div class="result" id="result">
+        Știam eu 😎❤️
+    </div>
+</div>
+
+<script>
+
+/* GENERARE INIMI */
+function createHeart(){
+    let heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (Math.random() * 20 + 15) + "px";
+    heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(()=>{
+        heart.remove();
+    },6000);
+}
+
+setInterval(createHeart, 300);
+
+/* PLIC */
+let envelope = document.getElementById("envelope");
+let letter = document.getElementById("letter");
+let noBtn = document.getElementById("no");
+let yesBtn = document.getElementById("yes");
+let result = document.getElementById("result");
+
+envelope.addEventListener("click", function(){
+
+    envelope.classList.add("open");
+
+    setTimeout(()=>{
+        envelope.classList.add("drop");
+    },800);
+
+    setTimeout(()=>{
+        letter.classList.add("showLetter");
+    },1300);
+});
+
+/* BUTON NU FUGE */
+noBtn.addEventListener("mouseover", function(){
+
+    let x = Math.random() * (window.innerWidth - 100);
+    let y = Math.random() * (window.innerHeight - 50);
+
+    noBtn.style.position = "absolute";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+});
+
+/* BUTON DA */
+yesBtn.addEventListener("click", function(){
+    result.style.display = "block";
+});
+
+</script>
 
 </body>
 </html>
