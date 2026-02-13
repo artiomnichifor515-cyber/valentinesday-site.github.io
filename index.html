@@ -223,21 +223,29 @@ envelope.addEventListener("click",()=>{
 
 /* BUTON NU */
 noBtn.addEventListener("click",()=>{
+noBtn.addEventListener("click",(e)=>{
 
     noClicks++;
 
-    const maxX=window.innerWidth-120;
-    const maxY=window.innerHeight-60;
+    // cât de mult poate să se miște (mic!)
+    const moveRange = 80; 
 
-    const x=Math.random()*maxX;
-    const y=Math.random()*maxY;
+    // poziția curentă
+    const rect = noBtn.getBoundingClientRect();
 
-    noBtn.style.position="fixed";
-    noBtn.style.left=x+"px";
-    noBtn.style.top=y+"px";
+    // deplasare mică random stânga/dreapta/sus/jos
+    let offsetX = (Math.random() - 0.5) * moveRange;
+    let offsetY = (Math.random() - 0.5) * moveRange;
 
-    if(noClicks>=5){
-        forceMessage.style.display="block";
+    // poziție nouă relativă la container
+    noBtn.style.position = "relative";
+    noBtn.style.left = offsetX + "px";
+    noBtn.style.top = offsetY + "px";
+
+    // după 5 apăsări
+    if(noClicks >= 5){
+
+        forceMessage.style.display = "block";
 
         const bigYes=document.createElement("button");
         bigYes.classList.add("bigYes");
@@ -248,6 +256,10 @@ noBtn.addEventListener("click",()=>{
 
         bigYesContainer.innerHTML="";
         bigYesContainer.appendChild(bigYes);
+    }
+
+});
+   
     }
 
 });
