@@ -1,275 +1,77 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine 💌</title>
-
-<style>
-*{box-sizing:border-box;}
-
-body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family:Arial, sans-serif;
-    overflow:hidden;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-}
-
-/* ================= CONTAINER ================= */
-
-.container{
-    position:relative;
-    width:90%;
-    max-width:450px;
-    text-align:center;
-}
-
-/* ================= INIMI ================= */
-
-.heart{
-    position:absolute;
-    bottom:-20px;
-    color:#fff;
-    animation: float linear forwards;
-    opacity:0.8;
-}
-
-@keyframes float{
-    from{transform:translateY(0) scale(0.8); opacity:1;}
-    to{transform:translateY(-110vh) scale(1.4); opacity:0;}
-}
-
-/* ================= PLIC ================= */
-
-.envelope{
-    width:100%;
-    aspect-ratio:3/2;
-    background:#ff4d6d;
-    border-radius:15px;
-    position:relative;
-    cursor:pointer;
-    box-shadow:0 20px 40px rgba(0,0,0,0.25);
-    transition:transform 0.8s ease, opacity 0.8s ease;
-}
-
-.flap{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:#e63950;
-    clip-path:polygon(0 0,100% 0,50% 65%);
-    transform-origin:top;
-    transition:transform 0.8s ease;
-}
-
-.open .flap{
-    transform:rotateX(180deg);
-}
-
-.drop{
-    transform:translateY(150vh);
-    opacity:0;
-}
-
-/* ================= SCRISOARE ================= */
-
-.letter{
-    display:none;
-    margin-top:20px;
-    background:#fff8dc;
-    padding:25px;
-    border-radius:20px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-    animation:fadeIn 0.8s ease forwards;
-}
-
-@keyframes fadeIn{
-    from{opacity:0; transform:scale(0.8);}
-    to{opacity:1; transform:scale(1);}
-}
-
-.show{display:block;}
-
-.buttons{
-    margin-top:20px;
-    position:relative;
-    height:80px;
-}
-
-button{
-    padding:12px 22px;
-    font-size:16px;
-    border:none;
-    border-radius:25px;
-    cursor:pointer;
-    margin:8px;
-    transition:0.3s;
-}
-
-#yes{
-    background:#ff4d6d;
-    color:white;
-}
-
-#yes:hover{
-    transform:scale(1.1);
-}
-
-#no{
-    background:white;
-    color:#ff4d6d;
-    position:absolute;
-}
-
-.bigYes{
-    margin-top:20px;
-    padding:18px 35px;
-    font-size:22px;
-    background:#ff4d6d;
-    color:white;
-    border:none;
-    border-radius:35px;
-    animation:pulse 1.5s infinite;
-}
-
-@keyframes pulse{
-    0%,100%{transform:scale(1);}
-    50%{transform:scale(1.1);}
-}
-
-.forced{
-    margin-top:15px;
-    font-size:20px;
-    color:#c9184a;
-    font-weight:bold;
-}
-
-.result{
-    margin-top:20px;
-    font-size:22px;
-    color:#d6336c;
-    display:none;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CUSTOMIZE: Browser tab title -->
+    <title>Will You Be My Valentine? 💝</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-<div class="container">
-
-    <div class="envelope" id="envelope">
-        <div class="flap"></div>
+    <!-- Floating Background Elements -->
+    <div class="floating-elements">
+        <!-- Hearts and bears will be added here by JavaScript -->
     </div>
 
-    <div class="letter" id="letter">
-        <h2>HEIIII ANDREEA 💖</h2>
-        <p>Vrei să fii partenera mea de V Day?))</p>
-
-        <div class="buttons" id="buttons">
-            <button id="yes">Da ❤️</button>
-            <button id="no">Nu 😅</button>
+    <!-- Main Content Container -->
+    <div class="container">
+        <h1 id="valentineTitle"></h1>
+        
+        <!-- Music Player -->
+        <div id="musicControls" class="music-controls">
+            <button id="musicToggle" class="music-btn">🎵 Play Music</button>
+            <audio id="bgMusic" loop>
+                <source id="musicSource" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
         </div>
 
-        <div id="forceMessage" class="forced" style="display:none;">
-            NU ÎMI DAI DE ALES 😭
+        <!-- First Question -->
+        <div class="question-section" id="question1">
+            <h2 id="question1Text"></h2>
+            <button class="cute-btn" onclick="moveButton(this)" id="yesBtn1"></button>
+            <button class="cute-btn" onclick="moveButton(this)" id="noBtn1"></button>
+            <!-- CUSTOMIZE: Secret answer text -->
+            <div class="secret-answer">
+                <button class="cute-btn special" onclick="showNextQuestion(2)" id="secretAnswerBtn"></button>
+            </div>
         </div>
 
-        <div id="bigYesContainer"></div>
+        <!-- Second Question (Love Meter) -->
+        <div class="question-section hidden" id="question2">
+            <h2 id="question2Text"></h2>
+            <!-- Love meter settings: min="0" max="10000" -->
+            <div class="love-meter">
+                <input type="range" min="0" max="10000" value="100" class="slider" id="loveMeter">
+                <p>
+                    <span class="love-value-container"><span id="startText"></span> (<span id="loveValue">100</span>%)</span>
+                    <span id="extraLove" class="hidden"></span>
+                </p>
+            </div>
+            <button class="cute-btn" onclick="showNextQuestion(3)" id="nextBtn"></button>
+        </div>
 
-        <div class="result" id="result">
-            hehehe..stiam euu💖💖
+        <!-- Final Question -->
+        <div class="question-section hidden" id="question3">
+            <h2 id="question3Text"></h2>
+            <button class="cute-btn final-yes" onclick="celebrate()" id="yesBtn3"></button>
+            <button class="cute-btn" onclick="moveButton(this)" id="noBtn3"></button>
+        </div>
+
+        <!-- CUSTOMIZE: Celebration message -->
+        <div class="celebration hidden" id="celebration">
+            <h2 id="celebrationTitle"></h2>
+            <p class="celebration-text" id="celebrationMessage"></p>
+            <p class="celebration-text" id="celebrationEmojis"></p>
         </div>
     </div>
 
-</div>
-
-<script>
-
-/* INIMI */
-function createHeart(){
-    const heart=document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML="❤️";
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.fontSize=(Math.random()*20+15)+"px";
-    heart.style.animationDuration=(Math.random()*3+4)+"s";
-    document.body.appendChild(heart);
-    setTimeout(()=>heart.remove(),7000);
-}
-setInterval(createHeart,500);
-
-/* ELEMENTE */
-const envelope=document.getElementById("envelope");
-const letter=document.getElementById("letter");
-const yesBtn=document.getElementById("yes");
-const noBtn=document.getElementById("no");
-const result=document.getElementById("result");
-const forceMessage=document.getElementById("forceMessage");
-const bigYesContainer=document.getElementById("bigYesContainer");
-
-let noClicks=0;
-
-/* DESCHIDERE */
-envelope.addEventListener("click",()=>{
-    envelope.classList.add("open");
-    setTimeout(()=>envelope.classList.add("drop"),700);
-    setTimeout(()=>letter.classList.add("show"),1200);
-});
-
-/* BUTON NU */
-noBtn.addEventListener("click",()=>{
-noBtn.addEventListener("click",(e)=>{
-
-    noClicks++;
-
-    // cât de mult poate să se miște (mic!)
-    const moveRange = 80; 
-
-    // poziția curentă
-    const rect = noBtn.getBoundingClientRect();
-
-    // deplasare mică random stânga/dreapta/sus/jos
-    let offsetX = (Math.random() - 0.5) * moveRange;
-    let offsetY = (Math.random() - 0.5) * moveRange;
-
-    // poziție nouă relativă la container
-    noBtn.style.position = "relative";
-    noBtn.style.left = offsetX + "px";
-    noBtn.style.top = offsetY + "px";
-
-    // după 5 apăsări
-    if(noClicks >= 5){
-
-        forceMessage.style.display = "block";
-
-        const bigYes=document.createElement("button");
-        bigYes.classList.add("bigYes");
-        bigYes.innerHTML="DA ❤️";
-        bigYes.onclick=()=>{
-            result.style.display="block";
-        };
-
-        bigYesContainer.innerHTML="";
-        bigYesContainer.appendChild(bigYes);
-    }
-
-});
-   
-    }
-
-});
-
-/* BUTON DA NORMAL */
-yesBtn.addEventListener("click",()=>{
-    result.style.display="block";
-});
-
-</script>
-
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="theme.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
