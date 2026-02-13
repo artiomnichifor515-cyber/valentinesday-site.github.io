@@ -6,9 +6,7 @@
 <title>Valentine 💌</title>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box;}
 
 body{
     margin:0;
@@ -26,11 +24,11 @@ body{
 .container{
     position:relative;
     width:90%;
-    max-width:400px;
+    max-width:450px;
     text-align:center;
 }
 
-/* ================= INIMI FUNDAL ================= */
+/* ================= INIMI ================= */
 
 .heart{
     position:absolute;
@@ -41,14 +39,8 @@ body{
 }
 
 @keyframes float{
-    from{
-        transform:translateY(0) scale(0.8);
-        opacity:1;
-    }
-    to{
-        transform:translateY(-110vh) scale(1.4);
-        opacity:0;
-    }
+    from{transform:translateY(0) scale(0.8); opacity:1;}
+    to{transform:translateY(-110vh) scale(1.4); opacity:0;}
 }
 
 /* ================= PLIC ================= */
@@ -56,11 +48,11 @@ body{
 .envelope{
     width:100%;
     aspect-ratio:3/2;
-    background:#ff5c8a;
-    border-radius:10px;
+    background:#ff4d6d;
+    border-radius:15px;
     position:relative;
     cursor:pointer;
-    box-shadow:0 15px 30px rgba(0,0,0,0.2);
+    box-shadow:0 20px 40px rgba(0,0,0,0.25);
     transition:transform 0.8s ease, opacity 0.8s ease;
 }
 
@@ -68,24 +60,10 @@ body{
     position:absolute;
     width:100%;
     height:100%;
-    background:#ff3f75;
-    clip-path:polygon(0 0,100% 0,50% 60%);
+    background:#e63950;
+    clip-path:polygon(0 0,100% 0,50% 65%);
     transform-origin:top;
     transition:transform 0.8s ease;
-}
-
-.shadow{
-    width:60%;
-    height:20px;
-    background:rgba(0,0,0,0.3);
-    border-radius:50%;
-    margin:20px auto 0;
-    animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-    0%,100%{transform:scaleX(1);}
-    50%{transform:scaleX(1.2);}
 }
 
 .open .flap{
@@ -103,8 +81,8 @@ body{
     display:none;
     margin-top:20px;
     background:#fff8dc;
-    padding:20px;
-    border-radius:15px;
+    padding:25px;
+    border-radius:20px;
     box-shadow:0 10px 25px rgba(0,0,0,0.2);
     animation:fadeIn 0.8s ease forwards;
 }
@@ -114,15 +92,12 @@ body{
     to{opacity:1; transform:scale(1);}
 }
 
-.show{
-    display:block;
-}
-
-/* ================= BUTOANE ================= */
+.show{display:block;}
 
 .buttons{
     margin-top:20px;
     position:relative;
+    height:80px;
 }
 
 button{
@@ -138,16 +113,10 @@ button{
 #yes{
     background:#ff4d6d;
     color:white;
-    animation:yesPulse 1.5s infinite;
-}
-
-@keyframes yesPulse{
-    0%,100%{transform:scale(1);}
-    50%{transform:scale(1.1);}
 }
 
 #yes:hover{
-    box-shadow:0 0 15px #ff4d6d;
+    transform:scale(1.1);
 }
 
 #no{
@@ -156,17 +125,34 @@ button{
     position:absolute;
 }
 
-.result{
+.bigYes{
     margin-top:20px;
-    font-size:20px;
-    color:#d6336c;
-    display:none;
-    animation:pop 0.5s ease;
+    padding:18px 35px;
+    font-size:22px;
+    background:#ff4d6d;
+    color:white;
+    border:none;
+    border-radius:35px;
+    animation:pulse 1.5s infinite;
 }
 
-@keyframes pop{
-    from{transform:scale(0);}
-    to{transform:scale(1);}
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.1);}
+}
+
+.forced{
+    margin-top:15px;
+    font-size:20px;
+    color:#c9184a;
+    font-weight:bold;
+}
+
+.result{
+    margin-top:20px;
+    font-size:22px;
+    color:#d6336c;
+    display:none;
 }
 
 </style>
@@ -180,19 +166,23 @@ button{
         <div class="flap"></div>
     </div>
 
-    <div class="shadow"></div>
-
     <div class="letter" id="letter">
-        <h2>Buna ziua123 💌</h2>
-        <p>Aici completezi mesajul tau pentru V Day ❤️</p>
+        <h2>HEIIII ANDREEA 💖</h2>
+        <p>Vrei să fii partenera mea de V Day? 💌</p>
 
         <div class="buttons" id="buttons">
             <button id="yes">Da ❤️</button>
             <button id="no">Nu 😅</button>
         </div>
 
+        <div id="forceMessage" class="forced" style="display:none;">
+            NU ÎMI DAI DE ALES 😭
+        </div>
+
+        <div id="bigYesContainer"></div>
+
         <div class="result" id="result">
-            Știam eu 😎❤️
+            ȘTIAM EU 😎❤️
         </div>
     </div>
 
@@ -209,7 +199,6 @@ function createHeart(){
     heart.style.fontSize=(Math.random()*20+15)+"px";
     heart.style.animationDuration=(Math.random()*3+4)+"s";
     document.body.appendChild(heart);
-
     setTimeout(()=>heart.remove(),7000);
 }
 setInterval(createHeart,500);
@@ -220,38 +209,50 @@ const letter=document.getElementById("letter");
 const yesBtn=document.getElementById("yes");
 const noBtn=document.getElementById("no");
 const result=document.getElementById("result");
-const buttons=document.getElementById("buttons");
+const forceMessage=document.getElementById("forceMessage");
+const bigYesContainer=document.getElementById("bigYesContainer");
 
-/* DESCHIDERE PLIC */
+let noClicks=0;
+
+/* DESCHIDERE */
 envelope.addEventListener("click",()=>{
     envelope.classList.add("open");
-
-    setTimeout(()=>{
-        envelope.classList.add("drop");
-    },700);
-
-    setTimeout(()=>{
-        letter.classList.add("show");
-    },1200);
+    setTimeout(()=>envelope.classList.add("drop"),700);
+    setTimeout(()=>letter.classList.add("show"),1200);
 });
 
-/* BUTON NU (nu iese din container) */
-function moveNo(){
-    const containerRect=buttons.getBoundingClientRect();
-    const maxX=containerRect.width-100;
-    const maxY=containerRect.height-50;
+/* BUTON NU */
+noBtn.addEventListener("click",()=>{
+
+    noClicks++;
+
+    const maxX=window.innerWidth-120;
+    const maxY=window.innerHeight-60;
 
     const x=Math.random()*maxX;
     const y=Math.random()*maxY;
 
+    noBtn.style.position="fixed";
     noBtn.style.left=x+"px";
     noBtn.style.top=y+"px";
-}
 
-noBtn.addEventListener("mouseover",moveNo);
-noBtn.addEventListener("touchstart",moveNo);
+    if(noClicks>=5){
+        forceMessage.style.display="block";
 
-/* BUTON DA */
+        const bigYes=document.createElement("button");
+        bigYes.classList.add("bigYes");
+        bigYes.innerHTML="DA ❤️";
+        bigYes.onclick=()=>{
+            result.style.display="block";
+        };
+
+        bigYesContainer.innerHTML="";
+        bigYesContainer.appendChild(bigYes);
+    }
+
+});
+
+/* BUTON DA NORMAL */
 yesBtn.addEventListener("click",()=>{
     result.style.display="block";
 });
